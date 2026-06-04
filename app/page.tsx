@@ -1,12 +1,12 @@
 import { Navbar } from "@/components/navbar"
-import { HeroSection, AboutSection, RolesSection, Footer } from "@/components/sections"
+import { HeroSection, ProjectSection, RolesSection, Footer } from "@/components/sections"
 
 export default function HomePage() {
   return (
     <main className="relative">
       <Navbar />
       <HeroSection />
-      <AboutSection />
+      <ProjectSection />
       <RolesSection />
       <Footer />
     </main>

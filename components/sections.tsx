@@ -1,5 +1,22 @@
+"use client"
+
 import Link from "next/link"
 import { Scroll, Settings, Hammer, Wrench, Code, Cog, ChevronRight } from "lucide-react"
+import { useState } from "react"
+
+function useInView(threshold: number) {
+  const [isInView, setIsInView] = useState(false)
+  const ref = (node: HTMLElement | null) => {
+    if (!node) return
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsInView(entry.isIntersecting),
+      { threshold }
+    )
+    observer.observe(node)
+    return () => observer.disconnect()
+  }
+  return { ref, isInView }
+}
 
 export function HeroSection() {
   return (
@@ -56,12 +73,20 @@ export function HeroSection() {
   )
 }
 
-import Link from "next/link"
-import { Scroll, Settings, Hammer, Wrench, Code, Cog, ChevronRight } from "lucide-react"
-
-export function HeroSection() {
-  const { ref: sectionRef, isInView } = useInView(0.15)
+export function ProjectSection() {
+  const [sectionRef, setSectionRef] = useState<HTMLElement | null>(null)
+  const [isInView, setIsInView] = useState(false)
   const [hoveredCard, setHoveredCard] = useState<number | null>(null)
+
+  const ref = (node: HTMLElement | null) => {
+    if (!node || sectionRef === node) return
+    setSectionRef(node)
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsInView(entry.isIntersecting),
+      { threshold: 0.15 }
+    )
+    observer.observe(node)
+  }
 
   const cards = [
     {
@@ -82,7 +107,7 @@ export function HeroSection() {
   ]
 
   return (
-    <section id="progetto" ref={sectionRef} className="relative py-24 border-t border-border overflow-hidden">
+    <section id="progetto" ref={ref} className="relative py-24 border-t border-border overflow-hidden">
       {/* Background accent */}
       <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-neon-purple/5 to-transparent pointer-events-none" />
       
