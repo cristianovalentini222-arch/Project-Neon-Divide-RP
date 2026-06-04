@@ -3,11 +3,13 @@ import { NextResponse } from "next/server"
 export async function POST(request: Request) {
   try {
     const data = await request.json()
+    console.log("[v0] Received candidatura data:", data)
 
     const webhookUrl = process.env.DISCORD_WEBHOOK_URL
+    console.log("[v0] Webhook URL exists:", !!webhookUrl)
 
     if (!webhookUrl) {
-      console.error("DISCORD_WEBHOOK_URL not configured")
+      console.error("[v0] DISCORD_WEBHOOK_URL not configured")
       return NextResponse.json(
         { error: "Server configuration error" },
         { status: 500 }
@@ -84,14 +86,18 @@ export async function POST(request: Request) {
       }),
     })
 
+    console.log("[v0] Discord response status:", response.status)
+
     if (!response.ok) {
-      console.error("Discord webhook error:", response.status)
+      const errorText = await response.text()
+      console.error("[v0] Discord webhook error:", response.status, errorText)
       return NextResponse.json(
         { error: "Failed to send to Discord" },
         { status: 500 }
       )
     }
 
+    console.log("[v0] Candidatura sent successfully")
     return NextResponse.json({ success: true })
   } catch (error) {
     console.error("Error processing candidatura:", error)
