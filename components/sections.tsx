@@ -145,11 +145,7 @@ export function ProjectSection() {
       <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-neon-purple/5 to-transparent pointer-events-none" />
       
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">
-        <div 
-          className={`mb-16 transition-all duration-700 ${
-            isInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-          }`}
-        >
+        <div className="mb-16">
           <p className="text-sm text-neon-cyan tracking-widest uppercase mb-4 font-mono">Project</p>
           <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-glow-purple" style={{ fontFamily: 'var(--font-heading)' }}>
             Neon Divide Roleplay
@@ -157,11 +153,7 @@ export function ProjectSection() {
         </div>
 
         <div className="grid gap-12 lg:grid-cols-2">
-          <div 
-            className={`space-y-6 transition-all duration-700 delay-200 ${
-              isInView ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-12"
-            }`}
-          >
+          <div className="space-y-6">
             <p className="text-muted-foreground leading-relaxed text-lg">
               Stiamo costruendo un <span className="text-neon-purple">server Minecraft roleplay</span>{" "}
               ambientato in un futuro cyberpunk. Una megalopoli in rovina, terre desolate ai suoi confini, 
@@ -179,11 +171,7 @@ export function ProjectSection() {
             </p>
           </div>
 
-          <div 
-            className={`space-y-4 transition-all duration-700 delay-300 ${
-              isInView ? "opacity-100 translate-x-0 scale-100" : "opacity-0 translate-x-12 scale-95"
-            }`}
-          >
+          <div className="space-y-4">
             {cards.map((card, index) => (
               <div
                 key={card.title}
