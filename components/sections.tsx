@@ -1,8 +1,15 @@
 "use client"
 
 import Link from "next/link"
-import { Scroll, Settings, Hammer, Wrench, Code, Cog, ChevronRight, X } from "lucide-react"
+import { Scroll, Settings, Hammer, Wrench, Code, Cog, ChevronRight } from "lucide-react"
 import { useState, useEffect, useRef } from "react"
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog"
 
 function useInView(threshold: number) {
   const [isInView, setIsInView] = useState(false)
@@ -232,72 +239,62 @@ export function ProjectSection() {
     </section>
 
     {/* Modal */}
-    {selectedCard !== null && (
-      <div 
-        className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm"
-        onClick={() => setSelectedCard(null)}
-      >
-        <div 
-          className={`relative max-w-lg w-full border bg-background p-8 shadow-2xl ${
-            cards[selectedCard].color === "purple"
-              ? "border-neon-purple box-glow-purple"
-              : cards[selectedCard].color === "cyan"
-              ? "border-neon-cyan box-glow-cyan"
-              : "border-neon-pink box-glow-pink"
-          }`}
-          onClick={(e) => e.stopPropagation()}
-        >
-          <button
-            onClick={() => setSelectedCard(null)}
-            className="absolute top-4 right-4 text-muted-foreground hover:text-foreground transition-colors"
-          >
-            <X className="h-5 w-5" />
-          </button>
+    <Dialog open={selectedCard !== null} onOpenChange={(open) => !open && setSelectedCard(null)}>
+      <DialogContent className={`border bg-background ${
+        selectedCard !== null && cards[selectedCard].color === "purple"
+          ? "border-neon-purple box-glow-purple"
+          : selectedCard !== null && cards[selectedCard].color === "cyan"
+          ? "border-neon-cyan box-glow-cyan"
+          : "border-neon-pink box-glow-pink"
+      }`}>
+        {selectedCard !== null && (
+          <>
+            <DialogHeader>
+              <DialogTitle 
+                className={`text-2xl font-bold ${
+                  cards[selectedCard].color === "purple" 
+                    ? "text-neon-purple" 
+                    : cards[selectedCard].color === "cyan" 
+                    ? "text-neon-cyan" 
+                    : "text-neon-pink"
+                }`}
+                style={{ fontFamily: 'var(--font-heading)' }}
+              >
+                {cards[selectedCard].title}
+              </DialogTitle>
+              <DialogDescription>
+                {cards[selectedCard].details.subtitle}
+              </DialogDescription>
+            </DialogHeader>
 
-          <h3 
-            className={`text-2xl font-bold mb-2 ${
+            <ul className="space-y-3 my-4">
+              {cards[selectedCard].details.content.map((item, i) => (
+                <li key={i} className="flex items-start gap-3 text-sm text-foreground/80">
+                  <span className={`mt-1.5 w-1.5 h-1.5 rounded-full flex-shrink-0 ${
+                    cards[selectedCard].color === "purple" 
+                      ? "bg-neon-purple" 
+                      : cards[selectedCard].color === "cyan" 
+                      ? "bg-neon-cyan" 
+                      : "bg-neon-pink"
+                  }`} />
+                  {item}
+                </li>
+              ))}
+            </ul>
+
+            <p className={`text-sm font-medium ${
               cards[selectedCard].color === "purple" 
                 ? "text-neon-purple" 
                 : cards[selectedCard].color === "cyan" 
                 ? "text-neon-cyan" 
                 : "text-neon-pink"
-            }`}
-            style={{ fontFamily: 'var(--font-heading)' }}
-          >
-            {cards[selectedCard].title}
-          </h3>
-          
-          <p className="text-muted-foreground text-sm mb-6">
-            {cards[selectedCard].details.subtitle}
-          </p>
-
-          <ul className="space-y-3 mb-6">
-            {cards[selectedCard].details.content.map((item, i) => (
-              <li key={i} className="flex items-start gap-3 text-sm text-foreground/80">
-                <span className={`mt-1.5 w-1.5 h-1.5 rounded-full flex-shrink-0 ${
-                  cards[selectedCard].color === "purple" 
-                    ? "bg-neon-purple" 
-                    : cards[selectedCard].color === "cyan" 
-                    ? "bg-neon-cyan" 
-                    : "bg-neon-pink"
-                }`} />
-                {item}
-              </li>
-            ))}
-          </ul>
-
-          <p className={`text-sm font-medium ${
-            cards[selectedCard].color === "purple" 
-              ? "text-neon-purple" 
-              : cards[selectedCard].color === "cyan" 
-              ? "text-neon-cyan" 
-              : "text-neon-pink"
-          }`}>
-            {cards[selectedCard].details.teaser}
-          </p>
-        </div>
-      </div>
-    )}
+            }`}>
+              {cards[selectedCard].details.teaser}
+            </p>
+          </>
+        )}
+      </DialogContent>
+    </Dialog>
     </>
   )
 }
