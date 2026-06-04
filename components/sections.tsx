@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { Scroll, Settings, Hammer, Wrench, Code, Cog, ChevronRight } from "lucide-react"
+import { Scroll, Settings, Hammer, Wrench, Code, Cog, ChevronRight, X } from "lucide-react"
 import { useState, useEffect, useRef } from "react"
 
 function useInView(threshold: number) {
@@ -76,6 +76,7 @@ export function HeroSection() {
 export function ProjectSection() {
   const [isInView, setIsInView] = useState(true)
   const [hoveredCard, setHoveredCard] = useState<number | null>(null)
+  const [selectedCard, setSelectedCard] = useState<number | null>(null)
   const sectionRef = useRef<HTMLElement | null>(null)
 
   useEffect(() => {
@@ -94,21 +95,52 @@ export function ProjectSection() {
       title: "Lore & Worldbuilding",
       description: "Un universo narrativo profondo con fazioni, conflitti e storie intrecciate. Ogni angolo della mappa racconta una storia.",
       color: "purple",
+      details: {
+        subtitle: "Un mondo da scoprire",
+        content: [
+          "Fazioni in lotta per il controllo della citta, ognuna con la propria storia e motivazioni.",
+          "Personaggi iconici che hanno plasmato il destino di Neon Divide.",
+          "Misteri nascosti nelle profondita della megalopoli, in attesa di essere svelati.",
+          "Eventi storici che hanno portato alla situazione attuale - guerre, tradimenti, alleanze infrante."
+        ],
+        teaser: "La storia di Neon Divide e ancora in fase di scrittura. Vuoi contribuire?"
+      }
     },
     {
       title: "Gameplay & Sistemi",
       description: "Meccaniche di gioco pensate per il roleplay: economia, progressione, reputazione e interazioni tra fazioni.",
       color: "cyan",
+      details: {
+        subtitle: "Meccaniche immersive",
+        content: [
+          "Sistema economico dinamico che riflette le azioni dei giocatori.",
+          "Progressione basata sulle scelte roleplay, non sul grinding.",
+          "Reputazione con le fazioni che influenza le opportunita disponibili.",
+          "Sistemi di crafting e commercio integrati nella narrativa del mondo."
+        ],
+        teaser: "I sistemi sono in fase di progettazione. Cerchiamo Systems Designer!"
+      }
     },
     {
       title: "Mappa & Costruzioni",
-      description: "Non solo una megalopoli: zone industriali, quartieri dimenticati, e terre desolate oltre i confini della citta. Un mondo vasto da esplorare.",
+      description: "Non solo una megalopoli: zone industriali, quartieri dimenticati, e terre desolate oltre i confini della citta.",
       color: "pink",
+      details: {
+        subtitle: "Un mondo vasto da esplorare",
+        content: [
+          "La megalopoli centrale con i suoi grattacieli illuminati al neon.",
+          "Quartieri periferici dove la legge non arriva.",
+          "Zone industriali abbandonate, rifugio di fuorilegge e ribelli.",
+          "Le Terre Desolate oltre le mura - un territorio ostile e misterioso."
+        ],
+        teaser: "La mappa e in costruzione. Cerchiamo Builder con esperienza!"
+      }
     },
   ]
 
   return (
-    <section id="progetto" ref={sectionRef} className="relative py-24 border-t border-border overflow-hidden">
+    <>
+      <section id="progetto" ref={sectionRef} className="relative py-24 border-t border-border overflow-hidden">
       {/* Background accent */}
       <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-neon-purple/5 to-transparent pointer-events-none" />
       
@@ -118,9 +150,9 @@ export function ProjectSection() {
             isInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
           }`}
         >
-          <p className="text-sm text-neon-cyan tracking-widest uppercase mb-4 font-mono">Il Progetto</p>
+          <p className="text-sm text-neon-cyan tracking-widest uppercase mb-4 font-mono">Project</p>
           <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-glow-purple" style={{ fontFamily: 'var(--font-heading)' }}>
-            Project Neon Divide
+            Neon Divide Roleplay
           </h2>
         </div>
 
@@ -157,6 +189,7 @@ export function ProjectSection() {
                 key={card.title}
                 onMouseEnter={() => setHoveredCard(index)}
                 onMouseLeave={() => setHoveredCard(null)}
+                onClick={() => setSelectedCard(index)}
                 className={`border bg-card/50 p-6 transition-all duration-300 cursor-pointer ${
                   card.color === "purple"
                     ? "border-neon-purple/30 hover:border-neon-purple"
@@ -198,12 +231,86 @@ export function ProjectSection() {
                 }`}>
                   {card.description}
                 </p>
+                <p className={`text-xs mt-3 transition-all duration-300 ${
+                  card.color === "purple" ? "text-neon-purple/70" : card.color === "cyan" ? "text-neon-cyan/70" : "text-neon-pink/70"
+                }`}>
+                  Clicca per saperne di piu
+                </p>
               </div>
             ))}
           </div>
         </div>
       </div>
     </section>
+
+    {/* Modal */}
+    {selectedCard !== null && (
+      <div 
+        className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm"
+        onClick={() => setSelectedCard(null)}
+      >
+        <div 
+          className={`relative max-w-lg w-full border bg-background p-8 shadow-2xl ${
+            cards[selectedCard].color === "purple"
+              ? "border-neon-purple box-glow-purple"
+              : cards[selectedCard].color === "cyan"
+              ? "border-neon-cyan box-glow-cyan"
+              : "border-neon-pink box-glow-pink"
+          }`}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <button
+            onClick={() => setSelectedCard(null)}
+            className="absolute top-4 right-4 text-muted-foreground hover:text-foreground transition-colors"
+          >
+            <X className="h-5 w-5" />
+          </button>
+
+          <h3 
+            className={`text-2xl font-bold mb-2 ${
+              cards[selectedCard].color === "purple" 
+                ? "text-neon-purple" 
+                : cards[selectedCard].color === "cyan" 
+                ? "text-neon-cyan" 
+                : "text-neon-pink"
+            }`}
+            style={{ fontFamily: 'var(--font-heading)' }}
+          >
+            {cards[selectedCard].title}
+          </h3>
+          
+          <p className="text-muted-foreground text-sm mb-6">
+            {cards[selectedCard].details.subtitle}
+          </p>
+
+          <ul className="space-y-3 mb-6">
+            {cards[selectedCard].details.content.map((item, i) => (
+              <li key={i} className="flex items-start gap-3 text-sm text-foreground/80">
+                <span className={`mt-1.5 w-1.5 h-1.5 rounded-full flex-shrink-0 ${
+                  cards[selectedCard].color === "purple" 
+                    ? "bg-neon-purple" 
+                    : cards[selectedCard].color === "cyan" 
+                    ? "bg-neon-cyan" 
+                    : "bg-neon-pink"
+                }`} />
+                {item}
+              </li>
+            ))}
+          </ul>
+
+          <p className={`text-sm font-medium ${
+            cards[selectedCard].color === "purple" 
+              ? "text-neon-purple" 
+              : cards[selectedCard].color === "cyan" 
+              ? "text-neon-cyan" 
+              : "text-neon-pink"
+          }`}>
+            {cards[selectedCard].details.teaser}
+          </p>
+        </div>
+      </div>
+    )}
+    </>
   )
 }
 
